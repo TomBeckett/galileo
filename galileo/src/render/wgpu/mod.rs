@@ -382,6 +382,8 @@ impl WgpuRenderer {
     }
 
     async fn create_device(adapter: &Adapter) -> (Device, Queue) {
+        let adapter_limits = adapter.limits();
+
         adapter
             .request_device(&wgpu::DeviceDescriptor {
                 required_features: wgpu::Features::empty(),
@@ -391,7 +393,10 @@ impl WgpuRenderer {
                         ..wgpu::Limits::downlevel_webgl2_defaults()
                     }
                 } else {
-                    wgpu::Limits::default()
+                    wgpu::Limits {
+                        max_color_attachments: adapter_limits.max_color_attachments,
+                        ..wgpu::Limits::default()
+                    }
                 },
                 label: None,
                 memory_hints: Default::default(),
