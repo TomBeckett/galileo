@@ -81,7 +81,15 @@ impl MvtPolygon {
                     });
                 }
                 Winding::Clockwise => {
-                    if !polygons.is_empty() {
+                    if polygons.is_empty() {
+                        // Malformed geometry: clockwise contour without preceding outer ring.
+                        // Treat it as an outer ring to avoid data loss.
+                        polygons.push(MvtPolygon {
+                            commands: commands.clone(),
+                            extent,
+                            contours: vec![contour],
+                        });
+                    } else {
                         let last_index = polygons.len() - 1;
                         polygons[last_index].contours.push(contour);
                     }
