@@ -393,10 +393,7 @@ impl WgpuRenderer {
                         ..wgpu::Limits::downlevel_webgl2_defaults()
                     }
                 } else {
-                    wgpu::Limits {
-                        max_color_attachments: adapter_limits.max_color_attachments,
-                        ..wgpu::Limits::default()
-                    }
+                    adapter_limits
                 },
                 label: None,
                 memory_hints: Default::default(),
